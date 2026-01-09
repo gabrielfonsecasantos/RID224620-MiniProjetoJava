@@ -1,7 +1,9 @@
 package com.java.dnc.school_manager.controller;
 
 import com.java.dnc.school_manager.dto.TeacherDTO;
-import com.java.dnc.school_manager.model.Student;
+import com.java.dnc.school_manager.exception.DuplicateCpfException;
+import com.java.dnc.school_manager.exception.InvalidCepException;
+import com.java.dnc.school_manager.exception.ResourceNotFoundException;
 import com.java.dnc.school_manager.model.Teacher;
 import com.java.dnc.school_manager.service.TeacherService;
 import jakarta.validation.Valid;
@@ -20,32 +22,55 @@ public class TeacherController {
     private TeacherService teacherService;
 
     @GetMapping
-    public ResponseEntity<List<Teacher>> findAll(){
-        return ResponseEntity.ok(teacherService.findAll());
+    public ResponseEntity<?> findAll() {
+        try {
+            return ResponseEntity.ok(teacherService.findAll());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Teacher> findById(@PathVariable Long id){
-        return ResponseEntity.ok(teacherService.findById(id));
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(teacherService.findById(id));
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 
     @PostMapping
-    public ResponseEntity<Teacher> create(@Valid @RequestBody TeacherDTO dto){
-        Teacher created = teacherService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<?> create(@Valid @RequestBody TeacherDTO dto) {
+        try {
+            Teacher created = teacherService.create(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (DuplicateCpfException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (InvalidCepException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Teacher> update(@PathVariable Long id, @Valid @RequestBody TeacherDTO dto){
-        return ResponseEntity.ok(teacherService.update(id, dto));
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody TeacherDTO dto) {
+        try {
+            return ResponseEntity.ok(teacherService.update(id, dto));
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (DuplicateCpfException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (InvalidCepException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        teacherService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            teacherService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
-
 }
-

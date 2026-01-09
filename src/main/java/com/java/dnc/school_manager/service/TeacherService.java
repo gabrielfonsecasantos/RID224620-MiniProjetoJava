@@ -9,6 +9,7 @@ import com.java.dnc.school_manager.model.Address;
 import com.java.dnc.school_manager.model.Student;
 import com.java.dnc.school_manager.model.Teacher;
 import com.java.dnc.school_manager.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,10 @@ import java.util.List;
 @Service
 public class TeacherService {
 
+    @Autowired
     private TeacherRepository teacherRepository;
+
+    @Autowired
     private ViaCepService viaCepService;
 
     //List all teachers

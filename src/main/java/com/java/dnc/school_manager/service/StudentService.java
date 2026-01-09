@@ -8,6 +8,7 @@ import com.java.dnc.school_manager.exception.ResourceNotFoundException;
 import com.java.dnc.school_manager.model.Address;
 import com.java.dnc.school_manager.model.Student;
 import com.java.dnc.school_manager.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,9 @@ import java.util.List;
 @Service
 public class StudentService {
 
+    @Autowired
     private final StudentRepository studentRepository;
+    @Autowired
     private final ViaCepService viaCepService;
 
     public StudentService(StudentRepository studentRepository, ViaCepService viaCepService) {
