@@ -137,6 +137,19 @@ class StudentServiceTest {
     }
 
     @Test
+    @DisplayName("Should update student successfully")
+    void update_ShouldUpdateStudent_WhenDataIsValid() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        when(viaCepService.fetchAddress(anyString())).thenReturn(viaCepResponse);
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
+
+        Student result = studentService.update(1L, studentDTO);
+
+        assertNotNull(result);
+        verify(studentRepository, times(1)).save(any(Student.class));
+    }
+
+    @Test
     @DisplayName("Should delete student successfully")
     void delete_ShouldDeleteStudent_WhenIdExists() {
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));

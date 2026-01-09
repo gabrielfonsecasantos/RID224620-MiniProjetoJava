@@ -24,6 +24,7 @@ public class TeacherDTO {
     @Email(message = "Invalid email format")
     private String email;
 
+    @NotBlank(message = "Phone number is required")
     private String phoneNumber;
     private String subject;
     private LocalDate hiringDate;

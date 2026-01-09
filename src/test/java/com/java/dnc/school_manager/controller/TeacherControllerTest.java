@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -119,6 +120,18 @@ class TeacherControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(teacherDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("PUT /api/teachers/{id} - Should update teacher")
+    void update_ShouldUpdateTeacher() throws Exception {
+        when(teacherService.update(anyLong(), any(TeacherDTO.class))).thenReturn(teacher);
+
+        mockMvc.perform(put("/api/teachers/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(teacherDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Maria Santos"));
     }
 
     @Test

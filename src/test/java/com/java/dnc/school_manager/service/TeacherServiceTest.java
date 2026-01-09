@@ -139,6 +139,19 @@ class TeacherServiceTest {
     }
 
     @Test
+    @DisplayName("Should update teacher successfully")
+    void update_ShouldUpdateTeacher_WhenDataIsValid() {
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
+        when(viaCepService.fetchAddress(anyString())).thenReturn(viaCepResponse);
+        when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
+
+        Teacher result = teacherService.update(1L, teacherDTO);
+
+        assertNotNull(result);
+        verify(teacherRepository, times(1)).save(any(Teacher.class));
+    }
+
+    @Test
     @DisplayName("Should delete teacher successfully")
     void delete_ShouldDeleteTeacher_WhenIdExists() {
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));

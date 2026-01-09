@@ -121,6 +121,18 @@ class StudentControllerTest {
     }
 
     @Test
+    @DisplayName("PUT /api/students/{id} - Should update student")
+    void update_ShouldUpdateStudent() throws Exception {
+        when(studentService.update(anyLong(), any(StudentDTO.class))).thenReturn(student);
+
+        mockMvc.perform(put("/api/students/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(studentDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Joao Silva"));
+    }
+
+    @Test
     @DisplayName("DELETE /api/students/{id} - Should delete student")
     void delete_ShouldDeleteStudent() throws Exception {
         mockMvc.perform(delete("/api/students/1"))
